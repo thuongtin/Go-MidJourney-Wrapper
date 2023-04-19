@@ -2,13 +2,19 @@ package salai
 
 import (
 	"MJ/globals"
+	"errors"
 	"fmt"
 	"log"
+	"sync"
 
 	"github.com/go-resty/resty/v2"
 )
 
+var mux sync.Mutex
+
 func PassPromptToSelfBot(channelID, prompt string) (*resty.Response, error) {
+	mux.Lock()
+	defer mux.Unlock()
 	payload := map[string]interface{}{
 		"type":           2,
 		"application_id": "936929561302675456",
@@ -173,6 +179,9 @@ func UploadToDiscord(fileName string, fileContent []byte) (string, error) {
 		Post("https://discord.com/api/v9/channels/1093452634356203530/attachments")
 	if err != nil {
 		return "", err
+	}
+	if len(uploadResp.Attachments) == 0 {
+		return "", errors.New("no attachments found")
 	}
 	_, err = client.R().
 		//SetBody(buf.Bytes()).

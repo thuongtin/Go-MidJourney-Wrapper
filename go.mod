@@ -6,6 +6,8 @@ require (
 	github.com/bwmarrin/discordgo v0.27.1
 	github.com/davecgh/go-spew v1.1.1
 	github.com/go-resty/resty/v2 v2.7.0
+	github.com/isxuelinme/poe_unoffical_api v1.2.8
+	github.com/joho/godotenv v1.5.1
 )
 
 require (
