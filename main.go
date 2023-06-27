@@ -5,9 +5,7 @@ import (
 	"MJ/salai"
 	"fmt"
 	"log"
-	"regexp"
 	"strings"
-	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/davecgh/go-spew/spew"
@@ -116,47 +114,6 @@ func mjImagineCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		})
 		return
 	}
-}
-func mjColoringForChildrenCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	keywords := i.ApplicationCommandData().Options[0].StringValue()
-	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseDeferredChannelMessageWithSource,
-	})
-
-	resp, oraResp, err := oraRequest(keywords)
-	if err != nil {
-		s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
-			Content: resp.String(),
-		})
-		return
-	}
-	go func(response string, channelId string) {
-		segments := strings.FieldsFunc(response, customSplit)
-		for _, segment := range segments {
-			regex := regexp.MustCompile(`^\d+\.\s`)
-			segment = regex.ReplaceAllStringFunc(segment, func(s string) string {
-				return ""
-			})
-			fmt.Println(segment)
-			if strings.HasPrefix(segment, "/mj_imagine") {
-				segment = strings.ReplaceAll(segment, "/mj_imagine ", "")
-				segment = strings.TrimRight(segment, ".")
-				regex := regexp.MustCompile(`(\S)--`)
-				segment := regex.ReplaceAllString(segment, "$1 --")
-				if strings.Contains(segment, "--style 4c.") {
-					segment = strings.ReplaceAll(segment, "--style 4c.", "--style 4c")
-				}
-				if resp, err := salai.PassPromptToSelfBot(channelId, segment); err != nil {
-					spew.Dump(err, resp)
-				}
-				time.Sleep(time.Second * 2)
-			}
-		}
-	}(oraResp.Response, i.ChannelID)
-	s.FollowupMessageCreate(i.Interaction, true, &discordgo.WebhookParams{
-		Content: fmt.Sprintf("Your keywords:\n```%s```\nGPT's response:\n```%s```", keywords, oraResp.Response),
-	})
-
 }
 
 // Define other command handler functions here (mj_upscale_to_max, mj_variation)

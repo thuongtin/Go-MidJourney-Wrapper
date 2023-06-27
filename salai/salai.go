@@ -22,7 +22,7 @@ func PassPromptToSelfBot(channelID, prompt string) (*resty.Response, error) {
 		"channel_id":     channelID,
 		"session_id":     "2fb980f65e5c9a77c96ca01f2c242cf6",
 		"data": map[string]interface{}{
-			"version": "1077969938624553050",
+			"version": "1118961510123847772",
 			"id":      "938956540159881230",
 			"name":    "imagine",
 			"type":    1,
