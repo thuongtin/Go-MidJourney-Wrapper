@@ -74,11 +74,10 @@ func messageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID != globals.MidJourneyID {
 		return
 	}
-	spew.Dump(m.Message.Content)
 	if len(m.Attachments) == 0 {
 		return
 	}
-
+	spew.Dump("XXXXX", m)
 	files := make([]*discordgo.File, len(m.Attachments))
 	msg := m.Message.Content
 	for i, attachment := range m.Attachments {
@@ -100,6 +99,7 @@ func messageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		//Files:      files,
 		Components: modifyButtonLabels(m.ID, m.Components),
 	})
+
 	if err != nil {
 		fmt.Println("Error sending message to channel:", err)
 	}
@@ -110,10 +110,10 @@ func messageUpdateHandler(s *discordgo.Session, m *discordgo.MessageUpdate) {
 	//	spew.Dump(m.Attachments)
 	//}
 	if m.Message.Author != nil && m.Message.Author.ID == globals.MidJourneyID {
-		spew.Dump(m.Message)
-		spew.Dump(m.Content)
-		fmt.Printf("Message updated by %s: %s\n", m.Author.Username, m.Message.Content)
-		spew.Dump(m.Attachments)
+		spew.Dump("messageUpdateHandler", m.Message)
+		//spew.Dump(m.Content)
+		//fmt.Printf("Message updated by %s: %s\n", m.Author.Username, m.Message.Content)
+		//spew.Dump(m.Attachments)
 	}
 }
 

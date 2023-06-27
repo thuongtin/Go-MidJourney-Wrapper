@@ -183,7 +183,6 @@ func commandHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
 }
 
 func mjDescribeCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
-
 	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseDeferredChannelMessageWithSource,
 	})
@@ -216,12 +215,13 @@ func mjDescribeCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	} else {
 		fmt.Println("Attachment not found.")
 	}
-	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseChannelMessageWithSource,
-		Data: &discordgo.InteractionResponseData{
-			Flags: 1 << 6,
-		},
+	str := "Ok"
+	s.InteractionResponseEdit(i.Interaction, &discordgo.WebhookEdit{
+		Content: &str,
 	})
+	if err != nil {
+		panic(err)
+	}
 }
 func main() {
 	dg, err := discordgo.New("Bot " + globals.DaVinciToken)
